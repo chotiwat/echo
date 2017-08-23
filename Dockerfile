@@ -1,4 +1,4 @@
-FROM golang:1.8-alpine
+FROM registry.sandbox.k8s.centrio.com/proxy:latest
 
 RUN apk --no-cache add ca-certificates
 
@@ -8,5 +8,6 @@ ADD main.go /go/src/github.com/wcharczuk/echo/main.go
 ADD vendor /go/src/github.com/wcharczuk/echo/vendor
 RUN go install github.com/wcharczuk/echo
 
-ENTRYPOINT /go/bin/echo
-EXPOSE 5000
+RUN env PORT=5000 /go/bin/echo &
+
+ENTRYPOINT /go/bin/proxy
