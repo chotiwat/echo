@@ -1,4 +1,4 @@
-FROM registry.sandbox.k8s.centrio.com/proxy:latest
+FROM registry.sandbox.k8s.centrio.com/proxy:7d108d5
 
 RUN apk --no-cache add ca-certificates
 
