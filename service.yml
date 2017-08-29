@@ -1,3 +1,14 @@
 accessibility: public
 containerPort: 5000
+httpPort: 80
+httpsPort: 443
 autoscale: enabled
+ports:
+  - name: port1
+    containerPort: 6000
+    httpPort: 6080
+    httpsPort: 6443
+  - name: port2
+    containerPort: 7000
+    httpPort: 7080
+    httpsPort: 7443
