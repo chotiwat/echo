@@ -1,3 +1,4 @@
 accessibility: private 
 containerPort: 5000
 autoscale: enabled
+awsRoleName: food-notify-test-us-east-1-lambdaRole
