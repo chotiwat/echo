@@ -1,2 +1,3 @@
 accessibility: public 
 containerPort: 5000
+fqdn: echo-test.sandbox.centrio.com
