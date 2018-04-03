@@ -1,4 +1,4 @@
-accessibility: private
+accessibility: protected
 ports:
   - containerPort: 5000
     name: http0
