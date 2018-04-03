@@ -6,6 +6,7 @@ ports:
     name: http1
   - containerPort: 5002
     name: http2
+protocol: TCP
 command:
   - sh
   - -cxe
