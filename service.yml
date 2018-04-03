@@ -1,8 +1,11 @@
 accessibility: private
 ports:
   - containerPort: 5000
+    name: http0
   - containerPort: 5001
+    name: http1
   - containerPort: 5002
+    name: http2
 command:
   - sh
   - -cxe
