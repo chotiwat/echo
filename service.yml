@@ -1,2 +1,2 @@
-accessibility: public 
+accessibility: protected 
 containerPort: 5000
