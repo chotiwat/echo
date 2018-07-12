@@ -1,2 +1,14 @@
 accessibility: protected 
 containerPort: 5000
+livenessProbe: # api endpoint to monitor your service's health. should return 200 on healthy
+  httpGet:
+    path: / # http path to use for healthchecks
+    port: 5000 #
+  initialDelaySeconds: 3 # extend this if your service has a long boot time
+  periodSeconds: 3 # how often to issue a healthcheck
+readinessProbe: # used by kubernetes to deem your pod healthy on initialization
+  httpGet:
+    path: /
+    port: 5555
+  initialDelaySeconds: 3
+  periodSeconds: 3
