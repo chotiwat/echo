@@ -3,38 +3,37 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
+	"net/http"
 	"time"
 
-	logger "github.com/blendlabs/go-logger"
-	"github.com/blendlabs/go-util/env"
-	web "github.com/blendlabs/go-web"
+	"github.com/blend/go-sdk/env"
+	"github.com/blend/go-sdk/exception"
+	"github.com/blend/go-sdk/logger"
+	"github.com/blend/go-sdk/web"
 )
 
 func main() {
-	agent := logger.All().WithWriter(logger.NewWriterFromEnv())
+	log := logger.All()
 
 	appStart := time.Now()
 
-	contents, err := ioutil.ReadFile(env.Env().String("CONFIG_PATH", "/var/secrets/config.yml"))
-	if err != nil {
-		agent.Warning(err)
-	}
-
-	app := web.New().WithLogger(agent)
+	app := web.NewFromConfig(web.NewConfigFromEnv()).WithLogger(log)
 	app.GET("/", func(r *web.Ctx) web.Result {
 		return r.Text().Result("echo")
 	})
 	app.GET("/headers", func(r *web.Ctx) web.Result {
-		contents, err := json.Marshal(r.Request.Header)
+		contents, err := json.Marshal(r.Request().Header)
 		if err != nil {
 			return r.View().InternalError(err)
 		}
 		return r.Text().Result(string(contents))
 	})
-	/*app.GET("/env", func(r *web.Ctx) web.Result {
-		return r.JSON().Result(env.Env())
-	})*/
+	app.GET("/env", func(r *web.Ctx) web.Result {
+		return r.JSON().Result(env.Env().Vars())
+	})
+	app.GET("/error", func(r *web.Ctx) web.Result {
+		return r.JSON().InternalError(exception.New("This is only a test").WithMessagef("this is a message").WithInner(exception.New("inner exception")))
+	})
 	app.GET("/proxy/*filepath", func(r *web.Ctx) web.Result {
 		return r.JSON().Result("OK!")
 	})
@@ -42,35 +41,37 @@ func main() {
 		if time.Since(appStart) > 12*time.Second {
 			return r.Text().Result("OK!")
 		}
-		return r.Text().BadRequest(fmt.Errorf("not ready"))
+		return r.Text().InternalError(fmt.Errorf("not ready"))
 	})
-	app.GET("/config", func(r *web.Ctx) web.Result {
-		r.Response.Header().Set("Content-Type", "application/yaml") // but is it really?
-		return r.Raw(contents)
-	})
+
 	app.GET("/long/:seconds", func(r *web.Ctx) web.Result {
-		seconds, err := r.RouteParamInt("seconds")
+		seconds, err := web.IntValue(r.RouteParam("seconds"))
 		if err != nil {
 			return r.Text().BadRequest(err)
 		}
 
+		r.Response().WriteHeader(http.StatusOK)
 		timeout := time.After(time.Duration(seconds) * time.Second)
 		ticker := time.NewTicker(500 * time.Millisecond)
 		for {
 			select {
 			case <-ticker.C:
 				{
-					fmt.Fprintf(r.Response, "tick\n")
+					fmt.Fprintf(r.Response(), "tick\n")
+					r.Response().InnerResponse().(http.Flusher).Flush()
 				}
 			case <-timeout:
 				{
-					return r.Raw([]byte("timeout\n"))
+					fmt.Fprintf(r.Response(), "timeout\n")
+					r.Response().InnerResponse().(http.Flusher).Flush()
+					return nil
 				}
 			}
 		}
 	})
+
 	app.GET("/echo/*filepath", func(r *web.Ctx) web.Result {
-		body := r.Request.URL.Path
+		body := r.Request().URL.Path
 		if len(body) == 0 {
 			return r.RawWithContentType(web.ContentTypeText, []byte("no response."))
 		}
@@ -87,5 +88,21 @@ func main() {
 		return r.RawWithContentType(web.ContentTypeText, body)
 	})
 
-	agent.SyncFatalExit(app.Start())
+	app.WithMethodNotAllowedHandler(func(r *web.Ctx) web.Result {
+		log.Infof("headers: %#v", r.Request().Header)
+		body, _ := r.PostBodyAsString()
+		log.Infof("body: %s", body)
+		return r.JSON().OK()
+	})
+
+	app.WithNotFoundHandler(func(r *web.Ctx) web.Result {
+		log.Infof("headers: %#v", r.Request().Header)
+		body, _ := r.PostBodyAsString()
+		log.Infof("body: %s", body)
+		return r.JSON().OK()
+	})
+
+	if err := web.StartWithGracefulShutdown(app); err != nil {
+		log.SyncFatalExit(err)
+	}
 }
