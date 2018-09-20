@@ -15,8 +15,6 @@ import (
 func main() {
 	log := logger.All()
 
-	appStart := time.Now()
-
 	app := web.NewFromConfig(web.NewConfigFromEnv()).WithLogger(log)
 	app.GET("/", func(r *web.Ctx) web.Result {
 		return r.Text().Result("echo")
