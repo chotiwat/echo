@@ -38,7 +38,7 @@ func main() {
 		return r.JSON().Result("OK!")
 	})
 	app.GET("/status", func(r *web.Ctx) web.Result {
-		if time.Since(appStart) > 12*time.Second {
+		if app.Latch().IsRunning() {
 			return r.Text().Result("OK!")
 		}
 		return r.Text().InternalError(fmt.Errorf("not ready"))
@@ -105,4 +105,5 @@ func main() {
 	if err := web.StartWithGracefulShutdown(app); err != nil {
 		log.SyncFatalExit(err)
 	}
+	log.Drain()
 }

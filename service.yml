@@ -3,7 +3,7 @@ containerPort: 5000
 
 readinessProbe:
   httpGet:
-    path: /
+    path: /status
     port: 5000
   initialDelaySeconds: 1
   periodSeconds: 5
