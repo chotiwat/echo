@@ -16,7 +16,7 @@ func main() {
 	log := logger.All()
 
 	app := web.NewFromConfig(web.NewConfigFromEnv()).WithLogger(log)
-	app.WithShutdownGracePeriod(15 * time.Second)
+	app.WithShutdownGracePeriod(30 * time.Second)
 	app.GET("/", func(r *web.Ctx) web.Result {
 		return r.Text().Result("echo")
 	})
