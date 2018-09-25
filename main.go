@@ -43,6 +43,14 @@ func main() {
 		return r.Text().InternalError(fmt.Errorf("not ready"))
 	})
 
+	usrChan := make(chan os.Signal)
+	signal.Notify(usrChan, syscall.SIGUSR1)
+	go func() {
+		for _ = range usrChan {
+			app.Server().SetKeepAlivesEnabled(false)
+		}
+	}()
+
 	app.GET("/long/:seconds", func(r *web.Ctx) web.Result {
 		seconds, err := web.IntValue(r.RouteParam("seconds"))
 		if err != nil {
