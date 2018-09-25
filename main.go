@@ -42,12 +42,6 @@ func main() {
 		}
 		return r.Text().InternalError(fmt.Errorf("not ready"))
 	})
-	app.GET("/status", func(r *web.Ctx) web.Result {
-		if app.Latch().IsRunning() {
-			return r.Text().Result("OK!")
-		}
-		return r.Text().InternalError(fmt.Errorf("not ready"))
-	})
 	app.GET("/prestop", func(r *web.Ctx) web.Result {
 		log.SyncInfof("disabling keepalive")
 		app.Server().SetKeepAlivesEnabled(false)
