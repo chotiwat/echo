@@ -50,6 +50,7 @@ func main() {
 	signal.Notify(usrChan, syscall.SIGUSR1)
 	go func() {
 		for _ = range usrChan {
+			log.SyncInfof("disabling keepalive")
 			app.Server().SetKeepAlivesEnabled(false)
 		}
 	}()
