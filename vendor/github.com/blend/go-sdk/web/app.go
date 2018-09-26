@@ -658,6 +658,9 @@ func (a *App) Shutdown() error {
 
 	a.syncInfof("server shutting down")
 	// a.server.SetKeepAlivesEnabled(false)
+	a.server.ConnState = func(conn net.Conn, state http.ConnState) {
+		a.log.Infof("state changed: conn=%p state=%d", conn, state)
+	}
 	if err := a.server.Shutdown(ctx); err != nil {
 		return exception.New(err)
 	}
