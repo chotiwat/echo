@@ -597,6 +597,10 @@ func (a *App) Start() (err error) {
 		a.server = a.CreateServer()
 	}
 
+	a.server.ConnState = func(conn net.Conn, state http.ConnState) {
+		fmt.Printf("state changed: conn=%p state=%d\n", conn, state)
+	}
+
 	// initialize the view cache.
 	err = a.StartupTasks()
 	if err != nil {
@@ -658,9 +662,6 @@ func (a *App) Shutdown() error {
 
 	a.syncInfof("server shutting down")
 	// a.server.SetKeepAlivesEnabled(false)
-	a.server.ConnState = func(conn net.Conn, state http.ConnState) {
-		fmt.Printf("state changed: conn=%p state=%d\n", conn, state)
-	}
 	if err := a.server.Shutdown(ctx); err != nil {
 		return exception.New(err)
 	}
