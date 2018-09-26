@@ -657,7 +657,7 @@ func (a *App) Shutdown() error {
 	defer cancel()
 
 	a.syncInfof("server shutting down")
-	a.server.SetKeepAlivesEnabled(false)
+	// a.server.SetKeepAlivesEnabled(false)
 	if err := a.server.Shutdown(ctx); err != nil {
 		return exception.New(err)
 	}
