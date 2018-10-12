@@ -1,5 +1,9 @@
 accessibility: protected
 containerPort: 5000
+ports:
+- containerPort: 443
+  name: https
+  protocol: TCP
 
 readinessProbe:
   httpGet:
