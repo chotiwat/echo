@@ -1,8 +1,7 @@
 accessibility: protected
 containerPort: 5000
-protocol: TCP
 ports:
-- containerPort: 443
+- containerPort: 4999
   name: https
   protocol: TCP
 loadBalancerSourceRanges:
