@@ -5,7 +5,7 @@ ports:
   name: https
   protocol: TCP
 loadBalancerSourceRanges:
-- 0.0.0.0/32
+- 0.0.0.0/0
 
 readinessProbe:
   httpGet:
