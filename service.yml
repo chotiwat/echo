@@ -1,6 +1,14 @@
 accessibility: protected
 containerPort: 5000
 
+resources:
+  limits:
+    cpu: 50m
+    memory: 100Mi
+  requests:
+    cpu: 10m
+    memory: 50Mi
+
 readinessProbe:
   httpGet:
     path: /
