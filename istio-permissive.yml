@@ -25,16 +25,6 @@ livenessProbe:
 istio:
   egressHosts: null
   enabled: true
-  gateway:
-    maxReplicas: 2
-    minReplicas: 2
-    resources:
-      limits:
-        cpu: 500m
-        memory: 200Mi
-      requests:
-        cpu: 100m
-        memory: 100Mi
   sidecar: {}
   tlsMode: PERMISSIVE
 
