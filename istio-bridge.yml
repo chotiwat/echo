@@ -1,5 +1,8 @@
 accessibility: protected
 containerPort: 5000
+loadBalancerSecurityGroups:
+- name: vpn-access-test
+- id: sg-050f3ad252e9abf20 # ssh-test
 
 resources:
   limits:
