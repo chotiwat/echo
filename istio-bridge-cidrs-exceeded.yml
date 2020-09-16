@@ -1,0 +1,64 @@
+accessibility: protected
+containerPort: 5000
+ports:
+- containerPort: 10000
+- containerPort: 11000
+- containerPort: 12000
+- containerPort: 13000
+- containerPort: 14000
+- containerPort: 15000
+- containerPort: 16000
+- containerPort: 17000
+- containerPort: 18000
+- containerPort: 19000
+loadBalancerSourceRanges:
+- 0.0.0.0/32
+- 0.0.0.1/32
+- 0.0.0.2/32
+- 0.0.0.3/32
+- 0.0.0.4/32
+- 0.0.0.5/32
+- 0.0.0.6/32
+- 0.0.0.7/32
+- 0.0.0.8/32
+- 0.0.0.9/32
+loadBalancerSecurityGroups:
+- name: test-echo-vpn-sg
+- id: sg-050f3ad252e9abf20 # ssh-test
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 5000
+  initialDelaySeconds: 1
+  periodSeconds: 5
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 5000
+  periodSeconds: 5
+ 
+istio:
+  egressHosts: null
+  enabled: true
+  gateway:
+    maxReplicas: 2
+    minReplicas: 2
+    resources:
+      limits:
+        cpu: 500m
+        memory: 200Mi
+      requests:
+        cpu: 100m
+        memory: 100Mi
+  sidecar: {}
+  tlsMode: BRIDGE
