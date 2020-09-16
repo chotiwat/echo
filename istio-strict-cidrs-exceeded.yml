@@ -2,25 +2,25 @@ accessibility: protected
 containerPort: 5000
 ports:
 - containerPort: 10000
-  name: port0
+  name: tcp-port0
 - containerPort: 11000
-  name: port1
+  name: tcp-port1
 - containerPort: 12000
-  name: port2
+  name: tcp-port2
 - containerPort: 13000
-  name: port3
+  name: tcp-port3
 - containerPort: 14000
-  name: port4
+  name: tcp-port4
 - containerPort: 25000
-  name: port5
+  name: tcp-port5
 - containerPort: 16000
-  name: port6
+  name: tcp-port6
 - containerPort: 17000
-  name: port7
+  name: tcp-port7
 - containerPort: 18000
-  name: port8
+  name: tcp-port8
 - containerPort: 19000
-  name: port9
+  name: tcp-port9
 loadBalancerSourceRanges:
 - 0.0.0.0/32
 - 0.0.0.1/32
