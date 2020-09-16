@@ -11,7 +11,7 @@ ports:
   name: port3
 - containerPort: 14000
   name: port4
-- containerPort: 15000
+- containerPort: 25000
   name: port5
 - containerPort: 16000
   name: port6
