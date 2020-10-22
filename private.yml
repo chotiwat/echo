@@ -1,0 +1,23 @@
+accessibility: private
+containerPort: 5000
+
+resources:
+  limits:
+    cpu: 50m
+    memory: 100Mi
+  requests:
+    cpu: 10m
+    memory: 50Mi
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: 5000
+  initialDelaySeconds: 1
+  periodSeconds: 5
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: 5000
+  periodSeconds: 5
